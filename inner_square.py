@@ -1,3 +1,4 @@
+import matplotlib as matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
@@ -36,6 +37,13 @@ def main():
         slider_c_ax = fig.add_axes([0.25, 0.1, 0.65, 0.03], facecolor=axis_color)
         slider_c = Slider(slider_c_ax, 'c value', 0, b, valinit=c, valfmt='%0.1f')
     draw_sliders(b,c)
+
+    # create a text for to show the current arre for a given b,c
+    axLabel = plt.axes([0.25, 0.02, 0.4, 0.05])
+    textbox = matplotlib.widgets.TextBox(axLabel, 'Area: ')
+    def area(b,c):
+            return ((b*b)-((2*b*b*b*c)/(b*b+c*c)))
+    textbox.set_val(format("{:.1f}".format(area(b,c))))
 
     plt.show()
 
