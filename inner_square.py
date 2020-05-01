@@ -25,9 +25,6 @@ bnc = square_inside_square(15.0, 5.0)
 def main():
     fig,ax=plt.subplots()
     fig.subplots_adjust(left=0.1, bottom=0.25)
-    print(bnc._b)
-    print(bnc._c)
-    print(bnc._area)
 
     # draw the square x and y axes with the value of b
     def draw_axes(b):
