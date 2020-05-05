@@ -5,17 +5,31 @@ from matplotlib import patches
 class square_inside_square:   
     # declare variable b, c and area
     #TODO: Check if this is the right way to define and initilaize instance variables
-    _b,_c,_area=[None, None, None]
+    __b,__c,_area=[None, None, None]
   
     # init method or constructor
     def __init__(self, b, c):   
-        self._b = b
-        self._c = c
+        self.__b = b
+        self.__c = c
         self.calculate()
+    def get_b(self):
+        return self.__b
+    
+    def set_b(self, b):
+        self.__b = b
+        self.calculate()
+    
+    def get_c(self):
+        return self.__c
+
+    def set_c(self, c):
+        self.__c = c
+        self.calculate()
+    
     def calculate(self):
-        b=self._b
-        c=self._c
-        self._area = ((b*b)-((2*b*b*b*c)/(b*b+c*c)))
+        b=self.__b
+        c=self.__c
+        self._area = 0.0 if b == 0 else ((b*b)-((2*b*b*b*c)/(b*b+c*c)))
 
 slider_b=None
 slider_c=None
@@ -31,7 +45,7 @@ def main():
         ax.set_xlim([0,b])
         ax.set_ylim([0,b])
         ax.axes.set_aspect('equal')
-    draw_axes(bnc._b)
+    draw_axes(bnc.get_b())
 
     # draw 4 lines and mark(tick) the x and y axis
     def draw_lines(b,c):
@@ -42,7 +56,7 @@ def main():
         ax.plot([0,c], [b,0], color='black')
         ax.plot([0,b], [b-c,b], color='black')
         ax.plot([b-c,b], [b,0], color='black')
-    draw_lines(bnc._b,bnc._c)
+    draw_lines(bnc.get_b(),bnc.get_c())
 
     # draw slider b and c and set them to values b and c respectively
     def draw_sliders(b,c):
@@ -53,7 +67,7 @@ def main():
         slider_b = Slider(slider_b_ax, 'b value', 0, max_b, valinit=b, valfmt='%0.1f')
         slider_c_ax = fig.add_axes([0.25, 0.1, 0.65, 0.03], facecolor=axis_color)
         slider_c = Slider(slider_c_ax, 'c value', 0, b, valinit=c, valfmt='%0.1f')
-    draw_sliders(bnc._b,bnc._c)
+    draw_sliders(bnc.get_b(),bnc.get_c())
 
     # create a text for to show the current arre for a given b,c
     axLabel = plt.axes([0.25, 0.02, 0.4, 0.05])
@@ -72,28 +86,30 @@ def main():
         global bnc
         global slider_b, slider_c
         # round b to increments of .1
-        bnc._b=round(val,1)
-        bnc.calculate()
+        bnc.set_b(round(val,1))
+        #bnc.calculate()
         remove_lines()
         # set max value of slider_c to the b value
-        slider_c.valmax=bnc._b
+        slider_c.valmax=bnc.get_b()
         slider_c.ax.set_xlim(slider_c.valmin, slider_c.valmax)
 
         # TODO: handle scenario where the new b value is less then the current c value
-        if (bnc._c>bnc._b):
-            bnc._c=bnc._b/2
-        slider_c.val=bnc._c
-        draw_axes(bnc._b)
-        draw_lines(bnc._b,bnc._c)
+        if (bnc.get_c()>bnc.get_b()):
+            bnc.set_c(bnc.get_b()/2)
+        slider_c.val=bnc.get_c()
+        draw_axes(bnc.get_b())
+        draw_lines(bnc.get_b(),bnc.get_c())
         textbox.set_val(format("{:.1f}".format(bnc._area)))
         fig.canvas.draw_idle()
     
     def sliders_c_changed(val):
         global bnc
-        bnc._c=round(val,1)
-        bnc.calculate()
+        c = round(val,1)
+        print('val={0};c={1}'.format(val, c))
+        bnc.set_c(c)
+        #bnc.calculate()
         remove_lines()
-        draw_lines(bnc._b,bnc._c)
+        draw_lines(bnc.get_b(),bnc.get_c())
         textbox.set_val(format("{:.1f}".format(bnc._area)))
         fig.canvas.draw_idle()
     
