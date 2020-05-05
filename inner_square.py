@@ -105,7 +105,6 @@ def main():
     def sliders_c_changed(val):
         global bnc
         c = round(val,1)
-        print('val={0};c={1}'.format(val, c))
         bnc.set_c(c)
         #bnc.calculate()
         remove_lines()
